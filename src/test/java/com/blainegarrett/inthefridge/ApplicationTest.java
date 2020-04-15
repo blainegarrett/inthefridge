@@ -13,7 +13,7 @@ public class ApplicationTest {
   }
 
   @Test
-  public void testLucky() {
+  public void testGetFridgeHandler() {
     var app = new Application();
 
     var result = app.getFridgeHandler("asdf");
