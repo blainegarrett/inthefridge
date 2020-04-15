@@ -8,11 +8,11 @@ public class FridgeItemEntityTest {
   @Test
   public void testCreate() {
     // Set Up Test
-    var i1 = ItemEntity.create("aSoda", "soda");
-    var f1 = FridgeEntity.create("myFridge");
+    ItemEntity i1 = ItemEntity.create("aSoda", "soda");
+    FridgeEntity f1 = FridgeEntity.create("myFridge");
 
     // Run Code to Test
-    var fi1 = FridgeItemEntity.create("sodaInMyFridge", f1, i1);
+    FridgeItemEntity fi1 = FridgeItemEntity.create("sodaInMyFridge", f1, i1);
 
     // Check Results
     assertEquals("sodaInMyFridge", fi1.getId());
