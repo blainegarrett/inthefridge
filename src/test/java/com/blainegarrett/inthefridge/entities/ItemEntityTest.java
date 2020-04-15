@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ItemEntityTest {
   @Test
   public void testCreate() {
-    var i1 = ItemEntity.create("aSoda", "soda");
+    ItemEntity i1 = ItemEntity.create("aSoda", "soda");
     assertEquals("aSoda", i1.getId());
     assertEquals("soda", i1.getType());
   }
