@@ -19,4 +19,5 @@ public class ItemRepositoryFirebase implements IItemRepository  {
     // TODO: Flesh this out for integration tests
     return Optional.empty();
   }
+
 }
