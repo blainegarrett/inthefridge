@@ -9,7 +9,7 @@ public class ApplicationTest {
   public void rootHandler() {
     var app = new Application();
     var result = app.rootHandler();
-    assertEquals("What is in the frige? See https://github.com/blainegarrett/inthefridge to find out.", result);
+    assertEquals("What is in the fridge? See https://github.com/blainegarrett/inthefridge to find out.", result);
   }
 
   @Test

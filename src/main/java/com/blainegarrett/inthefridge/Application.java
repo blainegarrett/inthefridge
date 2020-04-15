@@ -17,10 +17,10 @@ public class Application {
 
   @GetMapping("/")
   public String rootHandler() {
-    return "What is in the frige? See https://github.com/blainegarrett/inthefridge to find out.";
+    return "What is in the fridge? See https://github.com/blainegarrett/inthefridge to find out.";
   }
 
-  @GetMapping("/rest/friges/{fridgeId}")
+  @GetMapping("/rest/fridges/{fridgeId}")
   public String getFridgeHandler( @PathVariable("fridgeId") String fridgeId) {
     return "TODO: Show fridge with ID: " + fridgeId;
   }
