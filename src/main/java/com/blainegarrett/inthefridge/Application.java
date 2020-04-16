@@ -173,7 +173,7 @@ public class Application {
    * @param fridgeItemId ID of the Item in the Fridge
    * @return The FridgeItemEntity or Error if you attempt to add too much soda
    */
-  @GetMapping("/rest/fridges/{fridgeId}/items/{itemId}")
+  @GetMapping("/rest/fridges/{fridgeId}/items/{fridgeItemId}")
   @ResponseBody
   public FridgeItemEntity getItemFromFridgeHandler(@PathVariable("fridgeId") String fridgeId, @PathVariable("fridgeItemId") String fridgeItemId) {
     // TODO: Use DI to inject the Firebase Repository
