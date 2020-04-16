@@ -16,10 +16,9 @@ There is a set of Application layer tests the test interactions with the handler
 ```make test ```
 
 #### Running the Application Locally
-Prior to [https://github.com/blainegarrett/inthefridge/issues/8](Implementing The Database), running the application locally demonstrates the endpoints (described below) but does not return any data. To launch the Spring Boot application:
+Prior to [Implementing The Database](https://github.com/blainegarrett/inthefridge/issues/8), running the application locally demonstrates the endpoints (described below) but does not return any data. To launch the Spring Boot application:
 
 ```make dev ```
-
 
 
 
