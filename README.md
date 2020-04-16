@@ -1,5 +1,5 @@
 # What's In the Fridge?
-Simple HTTP Server Built on Spring Boot on Java 11 to Manage the Contents of Your Fridge
+Simple HTTP REST Service built with Spring Boot on Java 11 to Manage the Contents of Your Fridge
 
 ## Running the Code
 There is a Makefile that abstracts away the maven commands for convenience. 
@@ -10,8 +10,8 @@ The application leverages Maven. To install the application and its dependencies
 ```make install```
 
 #### Running Unit Tests
-The service layer is fully tested with unit tests that mock out the repository interactions. 
-There is a set of Application layer tests the test interactions with the handlers. Currently, sans dependency injection, the Respsitory layer is not mocked out and thus the test handle empty database error states.
+The [service layer](https://github.com/blainegarrett/inthefridge/tree/master/src/test/java/com/blainegarrett/inthefridge/services) is fully tested with unit tests that mock out the repository interactions. Coverage reporting will be added in [#9](https://github.com/blainegarrett/inthefridge/issues/9). 
+There is a set of [Application layer tests](https://github.com/blainegarrett/inthefridge/blob/master/src/test/java/com/blainegarrett/inthefridge/ApplicationTest.java) the test interactions with the handlers. Currently, sans dependency injection, the Respsitory layer is not mocked out and thus the test handle empty database error states.
 
 ```make test ```
 
@@ -42,9 +42,9 @@ Get items available to put in fridges. Returns `List<ItemEntity>`
 GET /rest/items
 ```
 
-Get a specific item by its id. Returns a `ItemEntity` or throws 404 Not Found
+Get a specific item by its id. Returns an `ItemEntity` or throws 404 Not Found
 ```$xslt
-GET /rest/items/<itemId>
+GET /rest/items/{itemId}
 ```
 
 Get a list of available fridges. Returns `List<FridgeEntity>`
@@ -53,7 +53,7 @@ GET /rest/fridges
 ```
 Get a specific fridge by its id. Returns `FridgeEntity` or throw 404 Not Found
 ```$xslt
-GET /rest/fridges/<fridgeId>
+GET /rest/fridges/{fridgeId}
 ```
 
 List contents of fridge. Returns `List<FridgeItemEntity>` or throw 404 Not Found if fridge does not exist.
@@ -77,19 +77,21 @@ Delete a specific item in the fridge. Returns a `boolean` if the item was delete
 GET /rest/fridges/{fridgeId}/items/{fridgeItemId}/delete
 ```
 
-### Response types 
+### Response Objects 
 An `ItemEntity` is an object that contains an id identifying the item and a type classifier. These items are predefied in the database and can be though of as a list of available products anyone can put into their fridge.
 ```$xslt
-eg. {"id":"pepsi","type":"soda"}
-eg. {"id":"milk","type":"dairy"}
+{"id":"pepsi","type":"soda"}
 ```
 
 A `FridgeEntity` represents a fridge that can contain items.
 ```
-eg. {"id":"blaineFridge"},{"id":"katieFridge"}]
+{"id":"blaineFridge"},
+```
+```
+{"id":"katieFridge"}]
 ```
 
-A `FridgeItemEntity` represents an instance of a `ItemEntity` in a `FridgeEntity`. It has it's own `id` and contains subfields `fridge` and `item` with the the respective `FridgeEntity` and `ItemEntity`
+A `FridgeItemEntity` represents an instance of a `ItemEntity` in a `FridgeEntity`. It has it's own `id` and contains subfields `fridge` and `item` with the respective `FridgeEntity` and `ItemEntity`
 
 ```
 {
@@ -100,10 +102,16 @@ A `FridgeItemEntity` represents an instance of a `ItemEntity` in a `FridgeEntity
 ```
 
 ## Next Steps
-Due to time constraints, there are several remaining TODOs
+Due to time constraints, there are several remaining TODOs that have been identified with github issues.
 - [Implement Dependency Injection](https://github.com/blainegarrett/inthefridge/issues/6)
 - [Setup Tracing with Cloud Trace](https://github.com/blainegarrett/inthefridge/issues/7)
 - [Wire Up Live Databas](https://github.com/blainegarrett/inthefridge/issues/8)
 - [Implement Code Coverage](https://github.com/blainegarrett/inthefridge/issues/9)
 - [Implement Basic Authentication/Authorization](https://github.com/blainegarrett/inthefridge/issues/10)
 
+## Final Notes 
+This was my first time standing up a full Spring Boot application from scratch. My experience with JAVA has always been more lower level. More of the allocated time was spent dealing with configuration and unsuccessfully wrestling with libraries like Jacoco than I would have liked.
+
+I dedicated most of the actual development time to the core business logic. The emphasis on unit testing the service layer is reflective of this. Additionally, how I approached the design process can be seen in the [Pull Requests](https://github.com/blainegarrett/inthefridge/pulls?q=is%3Apr+is%3Aclosed) I created after each significant milestone. 
+
+There are several artifacts in the code that resulted from running out of time that might seem odd. Specifically, the [firebase dependencies](https://github.com/blainegarrett/inthefridge/blob/master/pom.xml#L87-L92) and [stubbed Repository pattern](https://github.com/blainegarrett/inthefridge/tree/master/src/main/java/com/blainegarrett/inthefridge/repositories) feels like cruft in lieu of not having dependency injection in place yet. 
