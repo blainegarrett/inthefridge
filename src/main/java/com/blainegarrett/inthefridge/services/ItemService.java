@@ -13,10 +13,18 @@ public class ItemService {
     this.repo = repo;
   }
 
+  /**
+   * Get a List of All Available Items
+   * @return A List of ItemEntities
+   */
   public List<ItemEntity> getItems() {
     return this.repo.query();
   }
 
+  /**
+   * Get an Item by Id
+   * @return A ItemEntity Optional
+   */
   public Optional<ItemEntity> getById(String id) {
     return this.repo.getById(id);
   }
