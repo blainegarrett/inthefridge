@@ -29,7 +29,6 @@ import java.util.Optional;
 @RestController
 public class Application {
 
-
   public static void main(String[] args) {
     // Fireup the service
     SpringApplication.run(Application.class, args);
@@ -65,7 +64,7 @@ public class Application {
    */
   @GetMapping("/rest/fridges")
   @ResponseBody
-  public List<FridgeEntity> getFridgeContents() {
+  public List<FridgeEntity> getFridgesHandler() {
     // TODO: Use DI to inject the Firebase Repository
     IFridgeRepository repo = new FridgeRepositoryFirebase();
     FridgeService fridgeService = new FridgeService(repo);
@@ -100,7 +99,7 @@ public class Application {
    */
   @GetMapping("/rest/fridges/{fridgeId}/items")
   @ResponseBody
-  public List<FridgeItemEntity> getFridgeContents(@PathVariable("fridgeId") String fridgeId) {
+  public List<FridgeItemEntity> getFridgeContentsHandler(@PathVariable("fridgeId") String fridgeId) {
     // TODO: Use DI to inject the Firebase Repository
     IFridgeRepository repo = new FridgeRepositoryFirebase();
     FridgeService fridgeService = new FridgeService(repo);
@@ -122,9 +121,9 @@ public class Application {
    * @param itemId ID of the Item to add to the Fridge
    * @return The newly Added Item or Error if you attempt to add too much soda
    */
-  @GetMapping("/rest/fridges/{fridgeId}/items/add/{itemId}")
+  @GetMapping("/rest/fridges/{fridgeId}/items/add/{itemId}") // TODO: USE POST VERB + BODY
   @ResponseBody
-  public FridgeItemEntity addItemToFridge(@PathVariable("fridgeId") String fridgeId, @PathVariable("itemId") String itemId) {
+  public FridgeItemEntity addItemToFridgeHandler(@PathVariable("fridgeId") String fridgeId, @PathVariable("itemId") String itemId) {
     // TODO: Use DI to inject the Firebase Repository
     IFridgeRepository fridgeRepo = new FridgeRepositoryFirebase();
     FridgeService fridgeService = new FridgeService(fridgeRepo);
@@ -171,12 +170,12 @@ public class Application {
   /**
    * Show an Item in the Fridge
    * @param fridgeId ID of the Fridge to add Item to
-   * @param itemId ID of the Item in the Fridge
+   * @param fridgeItemId ID of the Item in the Fridge
    * @return The FridgeItemEntity or Error if you attempt to add too much soda
    */
   @GetMapping("/rest/fridges/{fridgeId}/items/{itemId}")
   @ResponseBody
-  public FridgeItemEntity getItemFromFridge(@PathVariable("fridgeId") String fridgeId, @PathVariable("itemId") String itemId) {
+  public FridgeItemEntity getItemFromFridgeHandler(@PathVariable("fridgeId") String fridgeId, @PathVariable("fridgeItemId") String fridgeItemId) {
     // TODO: Use DI to inject the Firebase Repository
     IFridgeRepository fridgeRepo = new FridgeRepositoryFirebase();
     FridgeService fridgeService = new FridgeService(fridgeRepo);
@@ -189,25 +188,30 @@ public class Application {
       );
     }
 
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // TODO: Implement serice.getItemById()
-    ItemEntity fakeItem = ItemEntity.create("fake", "fake");
-    FridgeItemEntity fridgeItem = FridgeItemEntity.create("fakeItem", fridge.get(), fakeItem);
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // Get The Fridge Item From the Fridge
+    Optional<FridgeItemEntity> fridgeItemOptional;
 
-    return fridgeItem;
+    try {
+      fridgeItemOptional = fridgeService.getItemFromFridge(fridge.get(), fridgeItemId);
+    } catch (ItemNotInFridgeException e) {
+      throw new ResponseStatusException(
+          HttpStatus.BAD_REQUEST, e.getMessage()
+      );
+    }
+
+    return fridgeItemOptional.get();
   }
 
 
   /**
    * Delete an Item in the Fridge
    * @param fridgeId ID of the Fridge to remove Item from
-   * @param itemId ID of the Item to remove from Fridge
+   * @param fridgeItemId ID of the Item to remove from Fridge
    * @return Boolean if item was removed or Error if you item wasn't in the fridge
    */
-  @GetMapping("/rest/fridges/{fridgeId}/items/{itemId}/delete")
+  @GetMapping("/rest/fridges/{fridgeId}/items/{fridgeItemId}/delete") // TODO: Use DELETE VERB
   @ResponseBody
-  public boolean deleteItemFromFridge(@PathVariable("fridgeId") String fridgeId, @PathVariable("itemId") String itemId) {
+  public boolean deleteItemFromFridgeHandler(@PathVariable("fridgeId") String fridgeId, @PathVariable("fridgeItemId") String fridgeItemId) {
     // TODO: Use DI to inject the Firebase Repository
     IFridgeRepository fridgeRepo = new FridgeRepositoryFirebase();
     FridgeService fridgeService = new FridgeService(fridgeRepo);
@@ -220,15 +224,20 @@ public class Application {
       );
     }
 
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // TODO: Implement serice.getItemById()
-    ItemEntity fakeItem = ItemEntity.create("fake", "fake");
-    FridgeItemEntity fridgeItem = FridgeItemEntity.create("fakeItem", fridge.get(), fakeItem);
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // Get The Fridge Item From the Fridge
+    Optional<FridgeItemEntity> fridgeItemOptional;
+
+    try {
+      fridgeItemOptional = fridgeService.getItemFromFridge(fridge.get(), fridgeItemId);
+    } catch (ItemNotInFridgeException e) {
+      throw new ResponseStatusException(
+      HttpStatus.BAD_REQUEST, e.getMessage()
+      );
+    }
 
     // Delete the item
     try {
-      return fridgeService.removeItemFromFridge(fridge.get(), fridgeItem);
+      return fridgeService.removeItemFromFridge(fridge.get(), fridgeItemOptional.get());
     } catch(ItemNotInFridgeException e) {
       throw new ResponseStatusException(
           HttpStatus.BAD_REQUEST, e.getMessage()
