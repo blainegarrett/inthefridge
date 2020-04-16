@@ -14,4 +14,5 @@ public interface IFridgeRepository {
   public Optional<FridgeItemEntity> addItem(String fridgeId, String itemId, String itemType);
   public boolean deleteFridgeItem(String fridgeItemId);
   public List<FridgeItemEntity> getFridgeItems(String fridgeId);
+  public Optional<FridgeItemEntity> getFridgeItem(String fridgeItemId);
 }

@@ -43,4 +43,10 @@ public class FridgeRepositoryFirebase implements IFridgeRepository  {
     // TODO: Flesh this out for integration tests
     return null;
   }
+
+  @Override
+  public Optional<FridgeItemEntity> getFridgeItem(String fridgeItemId) {
+    // TODO: Flesh this out for integration tests
+    return Optional.empty();
+  }
 }
