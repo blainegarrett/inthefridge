@@ -83,4 +83,26 @@ public class FridgeService {
   public List<FridgeItemEntity> getItemsFromFridge(FridgeEntity fridge) {
     return repo.getFridgeItems(fridge.getId());
   }
+
+  /**
+   * Get an Item from a Fridge
+   * @param fridge Target Fridge
+   * @param fridgeItemId Id of Target Item
+   * @return Optional of FridgeItemEntity
+   * @throws ItemNotInFridgeException if Item is in a different Fridge
+   */
+  public Optional<FridgeItemEntity> getItemFromFridge(FridgeEntity fridge, String fridgeItemId) throws ItemNotInFridgeException{
+    Optional<FridgeItemEntity> fridgeItemOptional = repo.getFridgeItem(fridgeItemId);
+
+    if (!fridgeItemOptional.isEmpty()) {
+      // Resolve Optional
+      FridgeItemEntity fridgeItem = fridgeItemOptional.get();
+
+      if (!fridgeItem.getFridge().getId().equals(fridge.getId())) {
+        throw new ItemNotInFridgeException("This item is in another fridge");
+      }
+    }
+
+    return fridgeItemOptional;
+  }
 }

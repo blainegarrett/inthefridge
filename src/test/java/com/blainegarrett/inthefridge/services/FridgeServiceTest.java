@@ -169,6 +169,35 @@ public class FridgeServiceTest {
     assertEquals("coke3", result.get(2).getId());
   }
 
+  @Test void getItemFromFridgeSuccess() throws Exception {
+    // Set Up Test
+    FridgeService service = new FridgeService(repo);
+    FridgeEntity f1 = FridgeEntity.create("mockFridge");
+    ItemEntity i1 = ItemEntity.create("coke", "soda");
+    FridgeItemEntity fi1 = FridgeItemEntity.create("coke1", f1, i1);
+    Mockito.doReturn(Optional.of(fi1)).when(repo).getFridgeItem(Matchers.anyString());
+
+    // Run Code To Test
+    Optional<FridgeItemEntity> result = service.getItemFromFridge(f1, "coke1");
+
+    // Check Results
+    Mockito.verify(repo, Mockito.times(1)).getFridgeItem("coke1");
+    assertEquals("coke1", result.get().getId());
+  }
+
+  @Test void getItemFromFridgeWrongFridge() throws Exception {
+    // Set Up Test
+    FridgeService service = new FridgeService(repo);
+    FridgeEntity f1 = FridgeEntity.create("mockFridge");
+    FridgeEntity f2 = FridgeEntity.create("otherFridge");
+    ItemEntity i1 = ItemEntity.create("soda1", "soda");
+    FridgeItemEntity fi1 = FridgeItemEntity.create("coke1", f1, i1);
+    Mockito.doReturn(Optional.of(fi1)).when(repo).getFridgeItem(Matchers.anyString());
+
+    // Run Code To Test
+    assertThrows(ItemNotInFridgeException.class, () -> service.getItemFromFridge(f2, fi1.getId()));
+    Mockito.verify(repo, Mockito.times(1)).getFridgeItem("coke1");
+  }
 }
 
 
